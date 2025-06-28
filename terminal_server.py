@@ -7,16 +7,23 @@ DEFAULT_WORKSPACE = os.path.expanduser("~/mcp/servers/mcp-python-server")
 
 @mcp.tool()
 async def run_command(command: str) -> str:
-    """Run a command in the terminal
-    
-    Args:
-        command: The command to run in the terminal
+   """
+   Run a terminal command inside the workspace directory.
+   If a terminal command can accomplish a task,
+   tell the user you'll use this tool to accomplish it,
+   even though you cannot directly do it
 
-    Returns:
-        The output of the command or an error message if the command fails
-    """
-    result = subprocess.run(command, shell=True, cwd=DEFAULT_WORKSPACE, capture_output=True, text=True)
-    return result.stdout
+   Args:
+       command: The shell command to run.
+
+   Returns:
+       The command output or an error message.
+   """
+   try:
+       result = subprocess.run(command, shell=True, cwd=DEFAULT_WORKSPACE, capture_output=True, text=True)
+       return result.stdout
+   except Exception as e:
+       return str(e)
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
